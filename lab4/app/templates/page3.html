@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Project{% endblock %}
+
+{% block content %}
+    <h1>My projects</h1>
+    <ul>
+        <li>Mud Wheels</li>
+        <li>Lygnyk</li>
+        <li>Furnace</li>
+    </ul>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Project</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Mud Wheels</td>
+                <td>Game for Android with realistic physics</td>
+            </tr>
+            <tr>
+                <td>Lygnyk</td>
+                <td>Some important file library of textures and behavior</td>
+            </tr>
+            <tr>
+                <td>Furnace</td>
+                <td>Android app the main function of which is to heat the phone</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
