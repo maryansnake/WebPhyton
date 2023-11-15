@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Опитування</h1>
+
+{% for message in get_flashed_messages() %}
+    <div class="alert alert-{{ message[1] }}">
+        {{ message[0] }}
+    </div>
+{% endfor %}
+
+<form method="POST" action="{{url_for("survey")}}">
+    {{ form.hidden_tag() }}
+    <p>Питання 1: Яка ваша улюблена мова програмування?</p>
+    {{ form.question1.label }}<br>
+    {{ form.question1 }}
+    <br>
+
+    <p>Питання 2: Скільки років ви програмуєте?</p>
+    {{ form.question2.label }}<br>
+    {{ form.question2 }}
+    <br>
+
+    <p>Питання 3: Що б ви хотіли покращити у цій формі опитування?</p>
+    {{ form.question3.label }}<br>
+    {{ form.question3 }}
+    <br>
+
+    <input type="submit" value="Відправити">
+</form>
+
+<h2>Залишені відгуки</h2>
+<ul>
+    {% for feedback in feedback_list %}
+        <li>Питання 1: {{ feedback.question1 }}</li>
+        <li>Питання 2: {{ feedback.question2 }}</li>
+        <li>Питання 3: {{ feedback.question3 }}</li>
+        <br>
+    {% endfor %}
+</ul>
+{% endblock %}
