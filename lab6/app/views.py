@@ -161,6 +161,7 @@ def edit_todo(todo_id):
     if form.validate_on_submit():
         todo.title = form.title.data
         todo.description = form.description.data
+        todo.status = form.status.data
         db.session.commit()
         flash('Todo updated successfully!', 'success')
         return redirect(url_for('todo'))

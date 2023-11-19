@@ -1,4 +1,4 @@
-from wtforms import PasswordField, BooleanField
+from wtforms import PasswordField, BooleanField, SelectField
 from wtforms.validators import Length
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField
@@ -14,3 +14,4 @@ class LoginForm(FlaskForm):
 class TodoForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField('Description')
+    status = SelectField('Status', choices=[(0, 'Todo'), (1, 'In Progress'), (2, 'Done')], coerce=int, default=0)
