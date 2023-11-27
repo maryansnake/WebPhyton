@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% from 'render_field.html' import render_field %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+    <h1>Дані користувача</h1>
+    <p>Ваше імʼя: {{ current_user.username }}!</p>
+    <p>Ваша електронна адреса: {{ current_user.email }}!</p>
+    <p>Операційна система: {{ data.operating_system }}</p>
+    <p>User-Agent: {{ data.user_agent }}</p>
+    <p>Час зараз: {{ data.time_now }}</p>
+    <a href="{{ url_for('logout') }}">Вийти</a>
+
+    <form action="{{ url_for('change_password') }}" method="POST">
+        {{ form.csrf_token }}
+
+        {{ render_field(form.old_password) }}
+
+        {{ render_field(form.new_password) }}
+
+        {{ render_field(form.confirm_password) }}
+        <input type="submit" value="Змінити пароль">
+    </form>
+
+{% endblock %}

@@ -38,22 +38,15 @@ class RegistrationForm(FlaskForm):
             raise ValidationError("User with same username exists")
 
 
-"""username = StringField( 'Username
-validators-[Length(min=4, max=25,
-message = "Це поле має бути довжиною між 4 та 25 символів"),
-DataRequired(message = "Це поле обов 'язкове")])
-email = StringField('Email', validators- [DataRequired() , Email()])
-password = PasswordField('Password'
-validators= [Length(min=6,
-message = "Це поле має бути більше 6 символів"),
-DataRequired (message = "Це поле обов 'язкове"
-") 1)
-confirm_password = PasswordField('Confirm Password',
-validators=[DataRequired(), EqualTo('password')1)"""
-
-
 class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Log In')
+
+
+class ChangePassword(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired('old password is required')])
+    new_password = PasswordField('New Password', validators=[DataRequired('new password is required')])
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[DataRequired('confirm password is required'), EqualTo('password')])
