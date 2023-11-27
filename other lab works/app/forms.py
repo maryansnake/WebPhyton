@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, BooleanField, SelectField, SubmitField, EmailField
 from wtforms import StringField, TextAreaField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, ValidationError
 from wtforms.validators import Length
+
+from app.models import User
 
 
 class TodoForm(FlaskForm):
@@ -17,6 +19,16 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), Length(min=6)])
     submit = SubmitField('Register')
+
+    def validate_email(self, field):
+        user = User.query.filter(User.email == field.data).first()
+        if user:
+            raise ValidationError("User with same email exists")
+
+    def validate_username(self, field):
+        user = User.query.filter(User.username == field.data).first()
+        if user:
+            raise ValidationError("User with same username exists")
 
 
 class LoginForm(FlaskForm):
