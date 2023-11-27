@@ -8,7 +8,7 @@ from flask import session, make_response
 from flask_login import login_required, current_user, logout_user, login_user
 
 from app import app, db
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, ChangePassword
 from .forms import TodoForm
 from .models import Todo, User
 
@@ -141,24 +141,16 @@ def delete_all_cookies():
 @app.route('/change_password', methods=['POST'])
 @login_required
 def change_password():
-    if 'username' in session:
-        new_password = request.form['new_password']
-
-        username = session['username']
-        dataJsonPath = os.path.join(current_app.root_path, 'auth_data.json')
-
-        with open(dataJsonPath, 'r', encoding='utf-8') as file:
-            auth_data = json.load(file)
-
-        if username in auth_data:
-            auth_data[username] = new_password
-
-            with open(dataJsonPath, 'w', encoding='utf-8') as file:
-                json.dump(auth_data, file, ensure_ascii=False, indent=4)
-
-        return redirect(url_for('info'))
-    else:
-        return redirect(url_for('login'))
+    form = ChangePassword()
+    if form.validate_on_submit():
+        # user = User.query.get(current_user.id)
+        if not current_user.verify_password(form.old_password.data):
+            flash("Old password is incorect", "danger")
+            return redirect(url_for('account'))
+    current_user.password = form.new_password.data
+    db.session.commit()
+    flash("Password changed!", "success")
+    return redirect(url_for('account'))
 
 
 @app.route('/todo', methods=['GET', 'POST'])
@@ -211,4 +203,5 @@ def users():
 @app.route("/account")
 @login_required
 def account():
-    return render_template('account.html', title='Account', data=get_data())
+    form = ChangePassword()
+    return render_template('account.html', title='Account', data=get_data(), form=form)
