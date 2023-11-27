@@ -196,3 +196,9 @@ def delete_todo(todo_id):
     db.session.commit()
     flash('Todo deleted successfully!', 'success')
     return redirect(url_for('todo'))
+
+
+@app.route("/users")
+def users():
+    all_users = User.query.all()
+    return render_template('users.html', all_users=all_users, data=get_data())
