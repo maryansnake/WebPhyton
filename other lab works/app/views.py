@@ -4,11 +4,11 @@ import os
 from os.path import dirname, realpath, join
 from datetime import datetime
 from flask import current_app
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 import json
 from flask import render_template, request, redirect, url_for
 from .forms import TodoForm
-from .models import Todo
+from .models import Todo, User
 
 
 def get_data():
@@ -53,23 +53,43 @@ def login():
     form = LoginForm()
 
     if form.validate_on_submit():
-        username = form.username.data
+        email = form.email.data
         password = form.password.data
         remember = form.remember.data
+        user = User.query.filter(User.email == email).first()
 
-        dataJsonPath = join(dirname(realpath(__file__)), 'auth_data.json')
-        with open(dataJsonPath, 'r', encoding='utf-8') as file:
-            auth_data = json.load(file)
+        if user is None or not user.verify_password(password):
+            flash("invalid email or password!", "danger")
+            return redirect(url_for("login"))
 
-        if username in auth_data and auth_data[username] == password:
-            if remember:
-                session['username'] = username
-                return redirect(url_for('info'))
-        else:
-            flash('Invalid username or password', 'error')
-            return redirect(url_for('login'))
+        flash("Login succesfull!", "success")
+        if remember:
+            session["user"] = user
+            return redirect(url_for("info"))
+        return redirect(url_for("login"))
 
     return render_template("login.html", data=get_data(), form=form)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        email = form.email.data
+        username = form.username.data
+        password = form.password.data
+        user = User()
+        user.email = email
+        user.username = username
+        user.password = password
+
+        db.session.add(user)
+        db.session.commit()
+        flash("Register succesfull!", "success")
+        return redirect(url_for("login"))
+
+    return render_template("register.html", data=get_data(), form=form)
 
 
 @app.route('/info', methods=['GET'])
