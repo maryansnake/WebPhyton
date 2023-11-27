@@ -4,16 +4,12 @@
 
 {% block content %}
     <h1>Дані користувача</h1>
-    <p>Привіт, {{ session["user"]['username'] }}!</p>
+    <p>Привіт, {{ current_user.username }}!</p>
     <p>Операційна система: {{ data.operating_system }}</p>
     <p>User-Agent: {{ data.user_agent }}</p>
     <p>Час зараз: {{ data.time_now }}</p>
     <a href="{{ url_for('logout') }}">Вийти</a>
 
-
-
-
-    <!-- Виведення інформації про кукі -->
     <h2>Інформація про кукі:</h2>
     <table>
         <tr>

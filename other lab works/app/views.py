@@ -1,12 +1,14 @@
-from app import app, db
-from flask import session, make_response
-import os
-from os.path import dirname, realpath, join
-from datetime import datetime
-from flask import current_app
-from .forms import LoginForm, RegistrationForm
 import json
+import os
+from datetime import datetime
+
+from flask import current_app
 from flask import render_template, request, redirect, url_for
+from flask import session, make_response
+from flask_login import login_required, current_user, logout_user, login_user
+
+from app import app, db
+from .forms import LoginForm, RegistrationForm
 from .forms import TodoForm
 from .models import Todo, User
 
@@ -50,6 +52,8 @@ from flask import flash
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('info'))
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -64,9 +68,7 @@ def login():
 
         flash("Login succesfull!", "success")
         if remember:
-            session["user"] = {}
-            session["user"]['username'] = user.username
-            session["user"]['email'] = user.email
+            login_user(user, remember=True)
             return redirect(url_for("info"))
         return redirect(url_for("login"))
 
@@ -75,6 +77,8 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('info'))
     form = RegistrationForm()
 
     if form.validate_on_submit():
@@ -95,24 +99,21 @@ def register():
 
 
 @app.route('/info', methods=['GET'])
+@login_required
 def info():
-    user = session.get('user', None)
-    if user:
-        cookies = request.cookies
-        return render_template('info.html', data=get_data(), cookies=cookies)
-
-    return redirect(url_for('login'))
+    cookies = request.cookies
+    return render_template('info.html', data=get_data(), cookies=cookies)
 
 
 @app.route('/logout', methods=['GET'])
+@login_required
 def logout():
-    username = session.get('username', None)
-    if username:
-        session.pop('username')
+    logout_user()
     return redirect(url_for('login'))
 
 
 @app.route('/add_cookie', methods=["GET", "POST"])
+@login_required
 def add_cookie():
     if 'username' in session:
         key = request.form['key']
@@ -126,6 +127,7 @@ def add_cookie():
 
 
 @app.route('/delete_all_cookies', methods=['GET'])
+@login_required
 def delete_all_cookies():
     if 'username' in session:
         response = make_response(redirect(url_for('info')))
@@ -137,6 +139,7 @@ def delete_all_cookies():
 
 
 @app.route('/change_password', methods=['POST'])
+@login_required
 def change_password():
     if 'username' in session:
         new_password = request.form['new_password']
@@ -199,6 +202,13 @@ def delete_todo(todo_id):
 
 
 @app.route("/users")
+@login_required
 def users():
     all_users = User.query.all()
     return render_template('users.html', all_users=all_users, data=get_data())
+
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template('account.html', title='Account', data=get_data())
