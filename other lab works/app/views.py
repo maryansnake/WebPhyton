@@ -64,7 +64,9 @@ def login():
 
         flash("Login succesfull!", "success")
         if remember:
-            session["user"] = user
+            session["user"] = {}
+            session["user"]['username'] = user.username
+            session["user"]['email'] = user.email
             return redirect(url_for("info"))
         return redirect(url_for("login"))
 
@@ -94,14 +96,12 @@ def register():
 
 @app.route('/info', methods=['GET'])
 def info():
-    username = session.get('username', None)
-
-    if username:
+    user = session.get('user', None)
+    if user:
         cookies = request.cookies
+        return render_template('info.html', data=get_data(), cookies=cookies)
 
-        return render_template('info.html', username=username, data=get_data(), cookies=cookies)
-    else:
-        return redirect(url_for('login'))
+    return redirect(url_for('login'))
 
 
 @app.route('/logout', methods=['GET'])
