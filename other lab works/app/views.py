@@ -1,13 +1,11 @@
-import json
 import os
 from datetime import datetime
 
-from flask import current_app
 from flask import render_template, request, redirect, url_for
 from flask import session, make_response
 from flask_login import login_required, current_user, logout_user, login_user
-
-from app import app, db
+from flask import current_app as app
+from app import db
 from .forms import LoginForm, RegistrationForm, ChangePassword
 from .forms import TodoForm
 from .models import Todo, User
