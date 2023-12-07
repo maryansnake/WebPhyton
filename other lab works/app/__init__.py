@@ -6,6 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 from config import SECRET_KEY, DATABASE_URI
 
 db = SQLAlchemy()
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
 
 
 def create_app():
@@ -15,17 +18,13 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 
     db.init_app(app)
-
+    login_manager.init_app(app)
     with app.app_context():
         from app.api import api_bp
         app.register_blueprint(api_bp, url_prefix='/api')
         from app import views
     return app
 
+
 app = create_app()
 migrate = Migrate(app, db)
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-login_manager.login_message_category = 'info'
-
-
