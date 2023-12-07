@@ -1,9 +1,9 @@
-from app import app, db
+from app import db
 from flask import session, make_response
 import os
 from os.path import dirname, realpath, join
 from datetime import datetime
-from flask import current_app
+from flask import current_app as app
 from .forms import LoginForm, RegistrationForm
 import json
 from flask import render_template, request, redirect, url_for
