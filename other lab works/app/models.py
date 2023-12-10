@@ -1,5 +1,6 @@
 from flask_bcrypt import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy import func
 
 from app import db, login_manager
 
