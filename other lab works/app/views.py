@@ -240,5 +240,6 @@ def change_login():
 def update_user_last_seen(resp):
     if current_user.is_authenticated:
         current_user.last_seen = datetime.now()
-
+        db.session.commit()
+        
     return resp
