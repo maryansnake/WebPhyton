@@ -4,7 +4,7 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ url_for('register') }}" novalidate>
+    <form method="POST" action="{{ url_for('authet.register') }}" novalidate>
         {{ form.csrf_token }}
 
 

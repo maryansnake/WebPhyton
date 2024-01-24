@@ -8,7 +8,7 @@
     <p>Операційна система: {{ data.operating_system }}</p>
     <p>User-Agent: {{ data.user_agent }}</p>
     <p>Час зараз: {{ data.time_now }}</p>
-    <a href="{{ url_for('logout') }}">Вийти</a>
+    <a href="{{ url_for('authet.logout') }}">Вийти</a>
 
     <h2>Інформація про кукі:</h2>
     <table>
@@ -26,7 +26,7 @@
         {% endfor %}
     </table>
     <hr>
-    <form action="/add_cookie" method="POST">
+    <form action="{{ url_for('cookie.add_cookie') }}" method="POST">
         <label for="key">Ключ:</label>
         <input type="text" id="key" name="key" required>
         <br>
@@ -36,5 +36,5 @@
         <input type="submit" value="Додати кукі">
     </form>
     <hr>
-    <a href="/delete_all_cookies">Видалити всі кукі</a>
+    <a href="{{ url_for('cookie.delete_all_cookies') }}">Видалити всі кукі</a>
 {% endblock %}
